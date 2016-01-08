@@ -27,7 +27,7 @@ module SneakersPacker
   #
   def self.remote_call(name, data, options = {})
     @client ||= RpcClient.new(publisher)
-    message = packer.pack_request(data)
+    message = message_packer.pack_request(data)
     response = @client.call name, message, options
     response_data, from, status = message_packer.unpack_response(response)
     response_data
