@@ -1,5 +1,6 @@
-require 'sneakers'
+require "sneakers"
 require "sneakers_packer/version"
+require "sneakers_packer/configuration"
 
 module SneakersPacker
   class RemoteCallTimeoutError < Exception; end
@@ -13,7 +14,7 @@ module SneakersPacker
   # @param name route_key for message
   # @param data
   def self.publish(name, data)
-    message = packer.pack_request(data)
+    message = self.message_packer.pack_request(data)
     publisher.publish message, to_queue: name
   end
 
@@ -28,7 +29,7 @@ module SneakersPacker
     @client ||= RpcClient.new(publisher)
     message = packer.pack_request(data)
     response = @client.call name, message, options
-    response_data, from, status = packer.unpack_response(response)
+    response_data, from, status = self.message_packer.unpack_response(response)
     response_data
   end
 
@@ -36,7 +37,4 @@ module SneakersPacker
     @publisher ||= ::Sneakers::Publisher.new
   end
 
-  def self.packer
-    @packer ||= MessagePacker.new("sneaker_demo")
-  end
 end

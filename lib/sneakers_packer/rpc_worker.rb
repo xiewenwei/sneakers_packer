@@ -7,7 +7,7 @@ module SneakersPacker
     end
 
     def packer
-      MessagePacker.new "sneaker_demo"
+      SneakersPacker.message_packer
     end
 
     def work_with_params(message, delivery_info, metadata)

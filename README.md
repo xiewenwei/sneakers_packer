@@ -4,7 +4,9 @@ SneakersPacker is a gem for using sneakers to 3 message communication patterns j
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Intall the `sneakers' gem first. see [sneakers](https://github.com/jondot/sneakers)
+
+Then add this line to your application's Gemfile:
 
 ```ruby
 gem 'sneakers_packer'
@@ -23,8 +25,16 @@ Or install it yourself as:
 ### Configuation
 
 SneakersPacker uses most of sneakers configuration for simpleness.
-Only one exception is that it use app_name for identitying the source of client.
+There are `app_name` and `rpc_timeout` should be set for SneakersPacker.
 
+Append below to `config/initializers/sneakers.rb`.
+
+```
+SneakersPacker.configure do |conf|
+  conf.rpc_timeout = 3             # rpc client timeout. default is 5 seconds.
+  conf.app_name = "sneakers_test"  # rpc client or server app's name. default is 'unknown'
+end
+```
 
 ### API usage examples
 
@@ -42,7 +52,7 @@ Only one exception is that it use app_name for identitying the source of client.
     from_queue :demo
 
     def call(data)
-      puts "data is #{message}"
+      puts "data is #{data}"
       # do something...
     end
   end
@@ -89,7 +99,11 @@ It is almost same with Job Message except that one routing_key with multiple que
 
 **Client**
 
+remote call with default timeouit. default is 5 seconds.
 `SneakersPacker.remote_call("rpc_server", 10)`
+
+remote call with custom timeouit.
+`SneakersPacker.remote_call("rpc_server", 12, timeout: 2)`
 
 **Server**
 
@@ -116,5 +130,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sneakers_packer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/xiewenwei/sneakers_packer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 

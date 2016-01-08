@@ -1,7 +1,5 @@
 module SneakersPacker
   class RpcClient
-    # default timeout for remote call. unit is seconds
-    DEFAULT_TIMEOUT = 5
 
     attr_reader :reply_queue
     attr_accessor :response, :call_id
@@ -30,7 +28,7 @@ module SneakersPacker
                         correlation_id: call_id,
                         reply_to:       @reply_queue.name)
 
-      timeout = (options[:timeout] || DEFAULT_TIMEOUT).to_i
+      timeout = (options[:timeout] || SneakersPacker.conf.rpc_timeout).to_i
 
       lock.synchronize { condition.wait(lock, timeout) }
 
