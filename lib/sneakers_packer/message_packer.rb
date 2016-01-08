@@ -3,11 +3,11 @@ require 'multi_json'
 
 module SneakersPacker
   class MessagePacker
-    attr_reader :from_info
+    attr_reader :app_name, :host_name
 
     def initialize(app_name = nil)
-      app_name ||= 'unknown'
-      @from_info = "#{app_name} #{Socket.gethostname} #{Process.pid}"
+      @app_name = app_name || 'unknown'
+      @host_name = Socket.gethostname
     end
 
     # Pack request data with standart json format
@@ -22,7 +22,7 @@ module SneakersPacker
     #    return "{\"from\" : \"one boohee-tiger 6354\", \"data\" : [\"1\", {\"name\" : \"vincent\"}]}"
 
     def pack_request(data)
-      MultiJson.dump "data" => data, "from" => @from_info
+      MultiJson.dump "data" => data, "from" => from_info
     end
 
     # Unpack request data which is standart json format
@@ -39,7 +39,7 @@ module SneakersPacker
     end
 
     def pack_response(data, status)
-      MultiJson.dump "data" => data, "from" => @from_info, "status" => status
+      MultiJson.dump "data" => data, "from" => from_info, "status" => status
     end
 
     # Unpack response data which is standart json format
@@ -56,6 +56,10 @@ module SneakersPacker
     end
 
     private
+
+    def from_info
+      "#{@app_name} #{@host_name} #{Process.pid}"
+    end
 
     def pack_data(data)
       MultiJson.dump data
