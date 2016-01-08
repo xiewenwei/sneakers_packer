@@ -1,20 +1,20 @@
 require "sneakers"
 require "sneakers_packer/version"
 require "sneakers_packer/configuration"
+require "sneakers_packer/message_packer"
+require "sneakers_packer/common_worker"
+require "sneakers_packer/rpc_worker"
+require "sneakers_packer/rpc_client"
 
 module SneakersPacker
   class RemoteCallTimeoutError < Exception; end
-
-  autoload :MessagePacker, "sneakers_packer/message_packer"
-  autoload :CommonWorker, "sneakers_packer/common_worker"
-  autoload :RpcWorker, "sneakers_packer/rpc_worker"
-  autoload :RpcClient, "sneakers_packer/rpc_client"
 
   # sender message to sneaker exchange
   # @param name route_key for message
   # @param data
   def self.publish(name, data)
-    message = self.message_packer.pack_request(data)
+    message = message_packer.pack_request(data)
+
     publisher.publish message, to_queue: name
   end
 
@@ -29,7 +29,7 @@ module SneakersPacker
     @client ||= RpcClient.new(publisher)
     message = packer.pack_request(data)
     response = @client.call name, message, options
-    response_data, from, status = self.message_packer.unpack_response(response)
+    response_data, from, status = message_packer.unpack_response(response)
     response_data
   end
 
@@ -37,4 +37,8 @@ module SneakersPacker
     @publisher ||= ::Sneakers::Publisher.new
   end
 
+  # message_packer is a singleton object
+  def self.message_packer
+    @message_packer ||= MessagePacker.new(self.conf.app_name)
+  end
 end

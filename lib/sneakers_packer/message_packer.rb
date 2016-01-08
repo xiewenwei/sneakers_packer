@@ -69,9 +69,4 @@ module SneakersPacker
       MultiJson.load message
     end
   end
-
-  # message_packer is a singleton object
-  def self.message_packer
-    @message_packer ||= MessagePacker.new(self.conf.app_name)
-  end
 end

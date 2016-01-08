@@ -38,8 +38,4 @@ describe SneakersPacker::MessagePacker do
     assert_match /\"from\":\"sneaker_demo_test/, message
     assert_match /\"data\":null/, message
   end
-
-  it "create message_packer" do
-    refute_nil SneakersPacker.message_packer
-  end
 end

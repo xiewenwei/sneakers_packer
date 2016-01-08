@@ -5,7 +5,11 @@ class SneakersPackerTest < Minitest::Test
     refute_nil ::SneakersPacker::VERSION
   end
 
-  def test_it_does_something_useful
-    assert true
+  def test_publisher
+    refute_nil SneakersPacker.publisher
+  end
+
+  def test_message_packer
+    refute_nil SneakersPacker.message_packer
   end
 end
