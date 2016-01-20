@@ -121,6 +121,7 @@ remote call with custom timeouit.
 ```
 
 **See the gem doc or source code for accurate detail**
+**You can see the demo app for SneakersPacker by** [Sneakers](https://github.com/xiewenwei/sneakers_demo).
 
 ## Development
 
