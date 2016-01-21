@@ -1,6 +1,6 @@
 # SneakersPacker
 
-SneakersPacker is a gem for using sneakers to 3 message communication patterns job message, broadcast and RPC(remote procedure call).
+SneakersPacker is a gem for using sneakers to realize 3 message communication patterns job message, broadcast and RPC(remote procedure call).
 
 ## Installation
 
