@@ -1,3 +1,7 @@
+## 0.1.3
+
+* [Bugfix] Change RemoteCallTimeoutError's parent to StandardError.
+* [Bugfix] Define NO_RESPONSE for rpc client.
 
 ## 0.1.2
 

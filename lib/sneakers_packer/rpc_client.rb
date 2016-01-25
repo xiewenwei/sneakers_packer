@@ -11,6 +11,8 @@ module SneakersPacker
       @consumer = build_reply_queue(channel, exchange)
     end
 
+    NO_RESPONSE = :__no_resp
+
     # call remote service via rabbitmq rpc
     # @param name route_key for service
     # @param message
@@ -19,7 +21,7 @@ module SneakersPacker
     # @raise RemoteCallTimeoutError if timeout
     def call(name, message, options = {})
       self.call_id = SecureRandom.uuid
-      self.response = nil
+      self.response = NO_RESPONSE
 
       ensure_reply_queue!
 
@@ -32,10 +34,10 @@ module SneakersPacker
 
       lock.synchronize { condition.wait(lock, timeout) }
 
-      if response
-        response
+      if response == NO_RESPONSE
+        raise RemoteCallTimeoutError, "remote call timeout. exceed #{timeout} seconds."
       else
-        raise RemoteCallTimeoutError.new("远程调用超时")
+        response
       end
     end
 
