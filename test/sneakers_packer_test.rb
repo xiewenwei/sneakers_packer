@@ -12,4 +12,10 @@ class SneakersPackerTest < Minitest::Test
   def test_message_packer
     refute_nil SneakersPacker.message_packer
   end
+
+  def test_remote_call_timeout_error
+    raise SneakersPacker::RemoteCallTimeoutError, "timeout"
+  rescue => e
+    assert e.is_a?(SneakersPacker::RemoteCallTimeoutError)
+  end
 end

@@ -7,7 +7,7 @@ require "sneakers_packer/rpc_worker"
 require "sneakers_packer/rpc_client"
 
 module SneakersPacker
-  class RemoteCallTimeoutError < Exception; end
+  class RemoteCallTimeoutError < StandardError; end
 
   # sender message to sneaker exchange
   # @param name route_key for message
