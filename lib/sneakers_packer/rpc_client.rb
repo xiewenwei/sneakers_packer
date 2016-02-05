@@ -35,7 +35,7 @@ module SneakersPacker
       if response
         response
       else
-        raise RemoteCallTimeoutError.new("远程调用超时")
+        raise RemoteCallTimeoutError.new("Remote call timeouts")
       end
     end
 
