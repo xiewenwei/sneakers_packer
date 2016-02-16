@@ -8,6 +8,7 @@ module SneakersPacker
     def initialize(publisher)
       @publisher = publisher
       channel, exchange = fetch_channel_and_exchange
+      @queue_name = "rpc.#{SecureRandom.uuid}"
       @consumer = build_reply_queue(channel, exchange)
     end
 
@@ -49,13 +50,15 @@ module SneakersPacker
       exchange = nil
 
       @publisher.instance_eval do
-        # ensure_connection connection first
-        @mutex.synchronize do
-          unless connected?
-            ensure_connection!
-            reconnected = true
-            channel = @channel
-            exchange = @exchange
+        if @bunny.nil? || !@bunny.automatically_recover?
+          # ensure_connection connection first
+          @mutex.synchronize do
+            unless connected?
+              ensure_connection!
+              reconnected = true
+              channel = @channel
+              exchange = @exchange
+            end
           end
         end
       end
@@ -69,7 +72,7 @@ module SneakersPacker
     def build_reply_queue(channel, exchange)
       @channel, @exchange = channel, exchange
 
-      @reply_queue    = channel.queue("", exclusive: true)
+      @reply_queue    = channel.queue(@queue_name, exclusive: true)
       @reply_queue.bind(exchange, routing_key: @reply_queue.name)
 
       @lock      = Mutex.new
