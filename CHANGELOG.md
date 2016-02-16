@@ -1,3 +1,8 @@
+## 0.1.4
+
+* Support automatically_recover of RabbitMQ for rpc.
+* Dependency for sneakers 1.0.0+.
+
 ## 0.1.3
 
 * [Bugfix] Change RemoteCallTimeoutError's parent to StandardError.
