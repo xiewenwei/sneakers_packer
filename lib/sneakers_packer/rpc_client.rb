@@ -36,7 +36,7 @@ module SneakersPacker
       lock.synchronize { condition.wait(lock, timeout) }
 
       if response == NO_RESPONSE
-        raise RemoteCallTimeoutError, "remote call timeout. exceed #{timeout} seconds."
+        raise RemoteCallTimeoutError, "Remote call timeouts.Exceed #{timeout} seconds."
       else
         response
       end
