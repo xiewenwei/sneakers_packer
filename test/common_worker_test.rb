@@ -1,3 +1,4 @@
+puts $:
 require 'test_helper'
 
 module SneakersPacker
