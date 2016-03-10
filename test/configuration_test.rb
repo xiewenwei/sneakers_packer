@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 describe SneakersPacker::Configuration do
   it "should be instantiated" do

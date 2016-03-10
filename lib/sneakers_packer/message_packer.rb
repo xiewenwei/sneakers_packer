@@ -61,10 +61,6 @@ module SneakersPacker
       "#{@app_name} #{@host_name} #{Process.pid}"
     end
 
-    def pack_data(data)
-      MultiJson.dump data
-    end
-
     def unpack_message(message)
       MultiJson.load message
     end

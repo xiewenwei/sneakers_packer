@@ -7,9 +7,9 @@ module SneakersPacker
 
     def initialize(publisher)
       @publisher = publisher
-      channel, exchange = fetch_channel_and_exchange
       @queue_name = "rpc.#{SecureRandom.uuid}"
-      @consumer = build_reply_queue(channel, exchange)
+
+      initialize_bunny
     end
 
     NO_RESPONSE = :__no_resp
@@ -23,8 +23,6 @@ module SneakersPacker
     def call(name, message, options = {})
       self.call_id = SecureRandom.uuid
       self.response = NO_RESPONSE
-
-      ensure_reply_queue!
 
       @exchange.publish(message.to_s,
                         routing_key:    name.to_s,
@@ -44,36 +42,24 @@ module SneakersPacker
 
     private
 
-    def ensure_reply_queue!
-      reconnected = false
-      channel = nil
-      exchange = nil
+    def initialize_bunny
+      pub = SneakersPacker.publisher
+      pub_mutext = pub.instance_variable_get :@mutex
 
-      @publisher.instance_eval do
-        if @bunny.nil? || !@bunny.automatically_recover?
-          # ensure_connection connection first
-          @mutex.synchronize do
-            unless connected?
-              ensure_connection!
-              reconnected = true
-              channel = @channel
-              exchange = @exchange
-            end
-          end
-        end
+      pub_mutext.synchronize do
+        pub.send(:ensure_connection!) unless pub.send(:connected?)
       end
 
-      # rebuid reply_queue when reconnecting occur
-      if reconnected
-        @consumer = build_reply_queue(channel, exchange)
-      end
+      @pub_opt = pub.instance_variable_get :@opt
+      @bunny = pub.instance_variable_get :@bunny
+      @channel = pub.instance_variable_get :@channel
+      @exchange = pub.instance_variable_get :@exchange
+      @consumer = build_reply_queue
     end
 
-    def build_reply_queue(channel, exchange)
-      @channel, @exchange = channel, exchange
-
-      @reply_queue    = channel.queue(@queue_name, exclusive: true)
-      @reply_queue.bind(exchange, routing_key: @reply_queue.name)
+    def build_reply_queue
+      @reply_queue    = @channel.queue(@queue_name, exclusive: true)
+      @reply_queue.bind(@exchange, routing_key: @reply_queue.name)
 
       @lock      = Mutex.new
       @condition = ConditionVariable.new
@@ -85,21 +71,6 @@ module SneakersPacker
           that.lock.synchronize { that.condition.signal }
         end
       end
-    end
-
-    # hack seankers publisher to get channel and exchange
-    def fetch_channel_and_exchange
-      ret = nil
-
-      @publisher.instance_eval do
-        # ensure_connection connection first
-        @mutex.synchronize do
-          ensure_connection! unless connected?
-        end
-        ret = [@channel, @exchange]
-      end
-
-      ret
     end
   end
 end

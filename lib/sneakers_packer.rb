@@ -5,6 +5,7 @@ require "sneakers_packer/message_packer"
 require "sneakers_packer/common_worker"
 require "sneakers_packer/rpc_worker"
 require "sneakers_packer/rpc_client"
+require 'connection_pool'
 
 module SneakersPacker
   class RemoteCallTimeoutError < StandardError; end
@@ -26,11 +27,19 @@ module SneakersPacker
   # @raise RemoteCallTimeoutError if timeout
   #
   def self.remote_call(name, data, options = {})
-    @client ||= RpcClient.new(publisher)
     message = message_packer.pack_request(data)
-    response = @client.call name, message, options
+    response = self.rpc_client_pool.with do |rpc_client|
+      rpc_client.call name, message, options
+    end
     response_data, from, status = message_packer.unpack_response(response)
     response_data
+  end
+
+  def self.rpc_client_pool
+    @rpc_client_pool ||= ConnectionPool.new(size: self.conf.pool) do
+      Rails.logger.info("Create")
+      RpcClient.new(publisher)
+    end
   end
 
   def self.publisher
