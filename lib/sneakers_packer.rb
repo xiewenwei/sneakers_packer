@@ -4,6 +4,7 @@ require "sneakers_packer/configuration"
 require "sneakers_packer/message_packer"
 require "sneakers_packer/common_worker"
 require "sneakers_packer/rpc_worker"
+require "sneakers_packer/rpc_request"
 require "sneakers_packer/rpc_client"
 
 module SneakersPacker
@@ -28,7 +29,8 @@ module SneakersPacker
   def self.remote_call(name, data, options = {})
     @client ||= RpcClient.new(publisher)
     message = message_packer.pack_request(data)
-    response = @client.call name, message, options
+    request = RpcRequest.new name, message
+    response = @client.call request, options
     response_data, from, status = message_packer.unpack_response(response)
     response_data
   end

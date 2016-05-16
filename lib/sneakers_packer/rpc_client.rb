@@ -2,17 +2,18 @@ module SneakersPacker
   class RpcClient
 
     attr_reader :reply_queue
-    attr_accessor :response, :call_id
-    attr_reader :lock, :condition
+    attr_reader :client_lock, :request_hash
 
     def initialize(publisher)
       @publisher = publisher
       channel, exchange = fetch_channel_and_exchange
       @queue_name = "rpc.#{SecureRandom.uuid}"
       @consumer = build_reply_queue(channel, exchange)
-    end
 
-    NO_RESPONSE = :__no_resp
+      @client_lock = Mutex.new
+      @request_lock = Mutex.new
+      @request_hash = {}
+    end
 
     # call remote service via rabbitmq rpc
     # @param name route_key for service
@@ -20,29 +21,38 @@ module SneakersPacker
     # @param options{timeout} [int] timeout. seconds.   optional
     # @return result of service
     # @raise RemoteCallTimeoutError if timeout
-    def call(name, message, options = {})
-      self.call_id = SecureRandom.uuid
-      self.response = NO_RESPONSE
-
+    def call(request, options = {})
       ensure_reply_queue!
 
-      @exchange.publish(message.to_s,
-                        routing_key:    name.to_s,
-                        correlation_id: call_id,
+      add_request(request)
+
+      @exchange.publish(request.message,
+                        routing_key:    request.name,
+                        correlation_id: request.call_id,
                         reply_to:       @reply_queue.name)
 
       timeout = (options[:timeout] || SneakersPacker.conf.rpc_timeout).to_i
 
-      lock.synchronize { condition.wait(lock, timeout) }
+      client_lock.synchronize { request.condition.wait(client_lock, timeout) }
 
-      if response == NO_RESPONSE
-        raise RemoteCallTimeoutError, "Remote call timeouts.Exceed #{timeout} seconds."
+      remove_request(request)
+
+      if request.processed?
+        request.response
       else
-        response
+        raise RemoteCallTimeoutError, "Remote call timeouts.Exceed #{timeout} seconds."
       end
     end
 
     private
+
+    def add_request(request)
+      @request_lock.synchronize { @request_hash[request.call_id] = request }
+    end
+
+    def remove_request(request)
+      @request_lock.synchronize { @request_hash.delete request.call_id }
+    end
 
     def ensure_reply_queue!
       reconnected = false
@@ -75,14 +85,14 @@ module SneakersPacker
       @reply_queue    = channel.queue(@queue_name, exclusive: true)
       @reply_queue.bind(exchange, routing_key: @reply_queue.name)
 
-      @lock      = Mutex.new
-      @condition = ConditionVariable.new
       that       = self
 
       @reply_queue.subscribe(manual_ack: false) do |delivery_info, properties, payload|
-        if properties[:correlation_id] == that.call_id
-          that.response = payload
-          that.lock.synchronize { that.condition.signal }
+        request = that.request_hash.fetch(properties[:correlation_id])
+        if request
+          request.response = payload
+          request.set_processed!
+          that.client_lock.synchronize { request.condition.signal }
         end
       end
     end
