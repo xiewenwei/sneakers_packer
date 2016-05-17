@@ -18,4 +18,10 @@ class SneakersPackerTest < Minitest::Test
   rescue => e
     assert e.is_a?(SneakersPacker::RemoteCallTimeoutError)
   end
+
+  def test_publish
+  end
+
+  def test_remote_call
+  end
 end

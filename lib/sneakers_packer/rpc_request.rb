@@ -1,6 +1,6 @@
 module SneakersPacker
   class RpcRequest
-    attr_reader :name, :message, :call_id
+    attr_reader :name, :message, :call_id, :condition
     attr_accessor :response
 
     def initialize(name, message)
@@ -10,6 +10,7 @@ module SneakersPacker
 
       @response = nil
       @processed = false
+      @condition = ConditionVariable.new
     end
 
     def processed?
@@ -18,10 +19,6 @@ module SneakersPacker
 
     def set_processed!
       @processed = true
-    end
-
-    def condition
-      @condition ||= ConditionVariable.new
     end
   end
 end

@@ -15,6 +15,6 @@ Sneakers.configure(opts)
 Sneakers.logger.level = Logger::INFO
 
 SneakersPacker.configure do |conf|
-  conf.rpc_timeout = 8
+  conf.rpc_timeout = 1
   conf.app_name = "sneakers_test"
 end

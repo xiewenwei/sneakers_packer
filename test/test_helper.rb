@@ -4,3 +4,5 @@ require 'sneakers_config'
 
 require 'minitest/autorun'
 require 'mocha/mini_test'
+
+# Local RabbitMQ server must be started when run test
