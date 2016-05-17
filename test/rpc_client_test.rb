@@ -6,12 +6,10 @@ describe SneakersPacker::RpcClient do
     assert_equal Hash.new, rpc_client.request_hash
     refute_nil rpc_client.client_lock
 
-    message = SneakersPacker.message_packer.pack_request("")
-    request = SneakersPacker::RpcRequest.new "unknown.rpc", message
+    request = SneakersPacker::RpcRequest.new "sneakers_packer_test.rpc1", 101
+    assert_equal 102, rpc_client.call(request)
 
-    assert_raises SneakersPacker::RemoteCallTimeoutError do
-      rpc_client.call request
-    end
+    assert_equal 102, request.response_data
   end
 
 end

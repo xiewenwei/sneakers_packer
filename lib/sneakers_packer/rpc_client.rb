@@ -34,7 +34,7 @@ module SneakersPacker
       remove_request(request)
 
       if request.processed?
-        request.response
+        request.response_data
       else
         raise RemoteCallTimeoutError, "Remote call timeouts.Exceed #{timeout} seconds."
       end

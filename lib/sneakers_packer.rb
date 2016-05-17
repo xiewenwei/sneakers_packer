@@ -33,11 +33,9 @@ module SneakersPacker
     # @raise RemoteCallTimeoutError if timeout
     #
     def remote_call(name, data, options = {})
-      message = message_packer.pack_request(data)
-      request = RpcRequest.new name, message
-      response = rpc_client.call request, options
-      response_data, from, status = message_packer.unpack_response(response)
-      response_data
+      request = RpcRequest.new name, data
+
+      rpc_client.call request, options
     end
 
     # publisher is a singleton object

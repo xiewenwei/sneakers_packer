@@ -55,11 +55,13 @@ module SneakersPacker
       that = @client
 
       @reply_queue.subscribe(manual_ack: false) do |delivery_info, properties, payload|
-        request = that.request_hash.fetch(properties[:correlation_id])
+        request = that.request_hash[properties[:correlation_id]]
         if request
           request.response = payload
           request.set_processed!
           that.client_lock.synchronize { request.condition.signal }
+        else
+          puts "#{properties[:correlation_id]}'s request is not found"
         end
       end
     end

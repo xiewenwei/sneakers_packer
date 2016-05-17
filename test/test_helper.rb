@@ -5,4 +5,8 @@ require 'sneakers_config'
 require 'minitest/autorun'
 require 'mocha/mini_test'
 
-# Local RabbitMQ server must be started when run test
+# Local RabbitMQ server and workers must be started before testing.
+# start rammitmq
+# rabbitmq-server
+# start workers
+# ruby test/sneakers_test_workers.rb

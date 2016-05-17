@@ -9,7 +9,7 @@ describe SneakersPacker::Configuration do
 
   it "should be configured" do
     # config in test_helper
-    assert_equal 1, SneakersPacker.conf.rpc_timeout
+    assert_equal 2, SneakersPacker.conf.rpc_timeout
     assert_equal "sneakers_test", SneakersPacker.conf.app_name
 
     # reconfigure

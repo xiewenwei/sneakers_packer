@@ -7,7 +7,7 @@ opts = {
   exchange_type: :direct,
   workers: 2,
   daemonize: false,
-  pid: "tmp/pid/sneakers.pid"
+  pid: "tmp/pids/sneakers.pid"
 }
 
 Sneakers.configure(opts)
@@ -15,6 +15,6 @@ Sneakers.configure(opts)
 Sneakers.logger.level = Logger::INFO
 
 SneakersPacker.configure do |conf|
-  conf.rpc_timeout = 1
+  conf.rpc_timeout = 2
   conf.app_name = "sneakers_test"
 end
