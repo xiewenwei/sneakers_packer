@@ -18,8 +18,6 @@ module SneakersPacker
     # @return result of service
     # @raise RemoteCallTimeoutError if timeout
     def call(request, options = {})
-      @subscriber.ensure_reply_queue!
-
       add_request(request)
 
       @publisher.publish(request.message,
