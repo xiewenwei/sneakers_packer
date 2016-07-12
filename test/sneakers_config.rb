@@ -6,7 +6,7 @@ opts = {
   exchange: 'sneakers',
   exchange_type: :direct,
   workers: 2,
-  daemonize: false,
+  daemonize: true,
   pid: "tmp/pids/sneakers.pid"
 }
 
