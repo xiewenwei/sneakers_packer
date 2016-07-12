@@ -1,4 +1,4 @@
-Copyright (c) 2015 Boohee
+Copyright (c) 2016 Boohee
 
 MIT License
 

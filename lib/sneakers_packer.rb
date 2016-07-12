@@ -14,6 +14,7 @@ module SneakersPacker
 
   # sneakers_packer_mutex is mutex for class instance variables initialization
   @sneakers_packer_mutex = Mutex.new
+  @publish_mutex = Mutex.new
 
   class << self
     # sender message to sneaker exchange
@@ -21,8 +22,9 @@ module SneakersPacker
     # @param data
     def publish(name, data)
       message = message_packer.pack_request(data)
-
-      publisher.publish message, to_queue: name
+      @publish_mutex.synchronize do
+        publisher.publish message, to_queue: name
+      end
     end
 
     # call remote service via rabbitmq rpc

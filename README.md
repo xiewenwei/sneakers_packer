@@ -128,10 +128,10 @@ remote call with custom timeouit.
 **How to run test?**
 
 1.start RabbitMQ Server. for mac
-`rabbit-server`
+`rabbitmq-server`
 
 2.start test workers
-`ruby test/test/sneakers_test_workers.rb`
+`ruby test/sneakers_test_workers.rb`
 
 3.run test
 `bundle exec rake test`
