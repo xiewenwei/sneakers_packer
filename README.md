@@ -33,7 +33,7 @@ There are `app_name` and `rpc_timeout` should be set for SneakersPacker.
 
 Append below to `config/initializers/sneakers.rb`.
 
-```
+```ruby
 SneakersPacker.configure do |conf|
   conf.rpc_timeout = 3             # rpc client timeout. default is 5 seconds.
   conf.app_name = "sneakers_test"  # rpc client or server app's name. default is 'unknown'
@@ -87,7 +87,7 @@ It is almost same with Job Message except that one routing_key with multiple que
   end
 ```
 
-```
+```ruby
   class OtherWorker
     include SneakersPacker::CommonWorker
 
