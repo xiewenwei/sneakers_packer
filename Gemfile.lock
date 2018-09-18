@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sneakers_packer (0.2.0)
+    sneakers_packer (0.3.0)
       multi_json
       sneakers (~> 2.7.0)
 

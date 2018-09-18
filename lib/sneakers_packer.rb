@@ -1,3 +1,4 @@
+require 'securerandom'
 require "sneakers"
 require "sneakers_packer/version"
 require "sneakers_packer/configuration"
