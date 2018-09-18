@@ -1,0 +1,43 @@
+PATH
+  remote: .
+  specs:
+    sneakers_packer (0.2.0.pre.dev)
+      multi_json
+      sneakers (~> 2.5.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    amq-protocol (2.2.0)
+    bunny (2.6.7)
+      amq-protocol (~> 2.2.0)
+    metaclass (0.0.4)
+    minitest (5.8.4)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
+    multi_json (1.13.1)
+    rake (10.5.0)
+    serverengine (1.5.11)
+      sigdump (~> 0.2.2)
+    sigdump (0.2.4)
+    sneakers (2.5.0)
+      bunny (~> 2.6.4)
+      serverengine (~> 1.5.11)
+      thor
+      thread (~> 0.1.7)
+    thor (0.20.0)
+    thread (0.1.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  amq-protocol (~> 2.1, <= 2.2.0)
+  bundler (~> 1.11)
+  minitest (~> 5.0)
+  mocha
+  rake (~> 10.0)
+  sneakers_packer!
+
+BUNDLED WITH
+   1.16.2
