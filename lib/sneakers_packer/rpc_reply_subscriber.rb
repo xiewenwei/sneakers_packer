@@ -19,9 +19,7 @@ module SneakersPacker
 
     def initialize_reply_queue
       # ensure_connection
-      @publisher.instance_eval do
-        @mutex.synchronize { ensure_connection! unless connected? }
-      end
+      @publisher.ensure_connection!
 
       channel = @publisher.instance_variable_get :@channel
       exchange = @publisher.instance_variable_get :@exchange
