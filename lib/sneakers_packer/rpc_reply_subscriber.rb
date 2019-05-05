@@ -19,8 +19,12 @@ module SneakersPacker
 
     def initialize_reply_queue
       # ensure_connection
-      @publisher.instance_eval do
-        @mutex.synchronize { ensure_connection! unless connected? }
+      if Sneakers::VERSION >= "2.7.0"
+        @publisher.ensure_connection!
+      else
+        @publisher.instance_eval do
+          @mutex.synchronize { ensure_connection! unless connected? }
+        end
       end
 
       channel = @publisher.instance_variable_get :@channel

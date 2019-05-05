@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module SneakersPacker
   class RpcRequest
     attr_reader :name, :call_id, :condition
