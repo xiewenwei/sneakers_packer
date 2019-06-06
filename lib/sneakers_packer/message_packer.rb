@@ -5,9 +5,12 @@ module SneakersPacker
   class MessagePacker
     attr_reader :app_name, :host_name
 
+    def self.host_name
+      @host_name ||= Socket.gethostname
+    end
+
     def initialize(app_name = nil)
       @app_name = app_name || 'unknown'
-      @host_name = Socket.gethostname
     end
 
     # Pack request data with standart json format
@@ -58,7 +61,7 @@ module SneakersPacker
     private
 
     def from_info
-      "#{@app_name} #{@host_name} #{Process.pid}"
+      "#{@app_name} #{self.class.host_name} #{Process.pid}"
     end
 
     def pack_data(data)

@@ -3,6 +3,7 @@ require "sneakers"
 require "sneakers_packer/version"
 require "sneakers_packer/configuration"
 require "sneakers_packer/message_packer"
+require "sneakers_packer/base_worker"
 require "sneakers_packer/common_worker"
 
 require "sneakers_packer/rpc_worker"

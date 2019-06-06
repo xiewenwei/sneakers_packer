@@ -5,6 +5,10 @@ describe SneakersPacker::MessagePacker do
     @packer = ::SneakersPacker::MessagePacker.new "sneaker_demo_test"
   end
 
+  it 'host_name' do
+    refute_nil SneakersPacker::MessagePacker.host_name
+  end
+
   it "pack request" do
     message = @packer.pack_request 1
     assert_match /\"from\":\"sneaker_demo_test/, message
