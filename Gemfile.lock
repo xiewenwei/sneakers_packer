@@ -17,7 +17,7 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.13.1)
-    rake (10.5.0)
+    rake (13.0.1)
     serverengine (2.0.7)
       sigdump (~> 0.2.2)
     sigdump (0.2.4)
@@ -36,7 +36,7 @@ DEPENDENCIES
   bundler (~> 1.11)
   minitest (~> 5.0)
   mocha
-  rake (~> 10.0)
+  rake (~> 13.0)
   sneakers_packer!
 
 BUNDLED WITH
