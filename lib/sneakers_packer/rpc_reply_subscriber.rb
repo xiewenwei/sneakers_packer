@@ -19,7 +19,7 @@ module SneakersPacker
 
     def initialize_reply_queue
       # ensure_connection
-      if Sneakers::VERSION >= "2.7.0"
+      if Gem::Version.new(Sneakers::VERSION) >= Gem::Version.new('2.7.0')
         @publisher.ensure_connection!
       else
         @publisher.instance_eval do
